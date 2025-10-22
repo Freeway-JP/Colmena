@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CUST_ID</field>
+    </columns>
+    <columns>
+        <field>Pendiente_Ofi_Comercial__c.Cliente__c</field>
+    </columns>
+    <columns>
+        <field>Pendiente_Ofi_Comercial__c.Estado__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_NAME</field>
+    </columns>
+    <columns>
+        <field>Pendiente_Ofi_Comercial__c.Analista_Suplente__c</field>
+    </columns>
+    <columns>
+        <field>CUST_OWNER_NAME</field>
+    </columns>
+    <currency>CRC</currency>
+    <filter>
+        <criteriaItems>
+            <column>CUST_CREATED_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,Jairo Cabalceta Piedra,Yorleny Matarrita Aguero,Sonia Solis Murillo,Mainor Jimenez Morales,Cynthia Rodriguez Jimenez,Fabian Gamboa Hernandez</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Pendiente_Ofi_Comercial__c.Estado__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Pendiente Ofic Comercial</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>PEND OFIC COM EXP JURIDI X VACACIONES</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Pendiente_Ofi_Comercial__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

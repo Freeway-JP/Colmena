@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CreditFlow__c.Nombre_Cliente__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.C_dula_Cliente__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <currency>CRC</currency>
+    <format>Tabular</format>
+    <name>Hoja de control crédito de Eca</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$CreditFlow__c@CreditFlow__c.Quote__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CreditFlow__c.Fecha_y_hora_de_asignaci_n_formalizaci_n__c</dateColumn>
+        <endDate>2024-12-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2024-01-01</startDate>
+    </timeFrameFilter>
+</Report>

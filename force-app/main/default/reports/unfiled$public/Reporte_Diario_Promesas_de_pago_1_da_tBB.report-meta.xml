@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$Id</field>
+    </columns>
+    <columns>
+        <field>Case$Identificaci_n__c</field>
+    </columns>
+    <columns>
+        <field>Case$Account</field>
+    </columns>
+    <columns>
+        <field>Case$DiasAtraso__c</field>
+    </columns>
+    <columns>
+        <field>Case.Gestiones_de_Cobro__r$Medio_de_contacto_utilizado__c</field>
+    </columns>
+    <columns>
+        <field>Case.Gestiones_de_Cobro__r$Reacciones__c</field>
+    </columns>
+    <columns>
+        <field>Case.Gestiones_de_Cobro__r$Fecha_Promesa_de_Pago__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Reporte Diario Promesas de pago (1 día)</description>
+    <filter>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>Cobranza-Gestor Menor 30 Outsourcing</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$DiasAtraso__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Gestiones_de_Cobro__r$Reacciones__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>PP-Promesa de pago</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Reporte Diario Promesas de pago (1 día)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Reporte_de_Gestiones_de_Cobro__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Case.Gestiones_de_Cobro__r$Fecha_de_Creaci_n__c</dateColumn>
+        <interval>INTERVAL_TODAY</interval>
+    </timeFrameFilter>
+</Report>

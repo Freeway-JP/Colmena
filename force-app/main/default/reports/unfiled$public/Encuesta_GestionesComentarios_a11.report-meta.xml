@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>SurveySubject.SurveyResponses$Name</field>
+    </columns>
+    <columns>
+        <field>SurveySubject.SurveyResponses.SurveyQuestionResponses$ResponseValue</field>
+    </columns>
+    <columns>
+        <field>SurveySubject.SurveyResponses.SurveyQuestionResponses$Invitation.BCR_Seguros__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <filter>
+        <criteriaItems>
+            <column>SurveySubject.SurveyResponses.SurveyQuestionResponses$Question</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Indique el motivo de la calificación.</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>SurveySubject$Survey</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Encuesta satisfaccion gestiones</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Encuesta - Gestiones/Comentarios</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Seguros_y_Respuestas__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>SurveySubject$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

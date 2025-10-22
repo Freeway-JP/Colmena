@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Estado__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Etapa_de_proceso_del_caso__c</field>
+    </columns>
+    <columns>
+        <field>CUST_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Formalizador_del_caso__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Contabilizador_del_caso__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Estado Formalizador/ Subetapata Pre-Formalizacion</description>
+    <filter>
+        <criteriaItems>
+            <column>CUST_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>C-000055167,C-000056185,C-000055976,C-000055773,C-000054874,C-000054865,C-000053150,C-000055260,C-000055210,C-000055171,C-000055151,C-000055092,C-000055101,C-000055070,C-000054925</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Traslados de Formalizadores</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$CreditFlow__c@CreditFlow__c.Quote__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CreditFlow__c.Fecha_y_hora_de_asignaci_n_formalizaci_n__c</dateColumn>
+        <endDate>2024-06-19</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2024-04-01</startDate>
+    </timeFrameFilter>
+</Report>

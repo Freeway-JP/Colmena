@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Promotor_del_Cr_dito__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Tipo_de_Registro__c</field>
+    </columns>
+    <columns>
+        <field>CUST_LAST_UPDATE</field>
+    </columns>
+    <currency>CRC</currency>
+    <filter>
+        <criteriaItems>
+            <column>CreditFlow__c.Estado__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Promoción</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CreditFlow__c.Etapa_de_proceso_del_caso__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Reproceso a promotor</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CreditFlow__c.Tipo_de_Registro__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Bono de Vivienda</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CreditFlow__c.Tipo_de_producto__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Interés Social Bono</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CreditFlow__c.Tipo_de_producto__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Vivienda Accesible con Bono</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CreditFlow__c.Oficina_del_promotor__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>322 - Guayabo,226 - Playas del Coco,321 - Tilarán,210 - Cañas,229 - La Cruz,225 - Centro de Negocios Liberia,211 - Upala</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CreditFlow__c.Oficina_del_promotor__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <field>CUST_CREATED_DATE</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CreditFlow__c.Etapa_de_proceso_del_caso__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Gestión Casos - Promoción Gte Este</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$CreditFlow__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

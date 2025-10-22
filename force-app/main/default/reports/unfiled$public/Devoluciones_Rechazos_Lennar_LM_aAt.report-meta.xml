@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Comentarios_de_rechazo__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Comentarios_de_rechazo_reproceso_1__c</field>
+    </columns>
+    <columns>
+        <field>CreditFlow__c.Comentarios_de_rechazo_reproceso_2__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Contabilización devoluciones del periodo en curso</description>
+    <filter>
+        <criteriaItems>
+            <column>CUST_CREATED_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Lennar Antonio Lara Montero</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CreditFlow__c.Promotor_del_Cr_dito_Nombre__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CreditFlow__c.Analista_del_caso__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CreditFlow__c.Estado__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Devoluciones / Rechazos Lennar LM</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$CreditFlow__c</reportType>
+    <scope>user</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CreditFlow__c.Fecha_asignacion_CSO__c</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

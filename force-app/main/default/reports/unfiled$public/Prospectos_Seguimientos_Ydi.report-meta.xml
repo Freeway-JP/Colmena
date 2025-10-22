@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Seguimiento_Cliente__c$Name</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$Prospecto__c</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$Estado__c</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$Tipo_de_Producto__c</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$Owner</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Seguimiento_Cliente__c$Monto_de_Producto__c</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$Oficina_a_Registrar_Credito__c</field>
+    </columns>
+    <columns>
+        <field>Seguimiento_Cliente__c$CreatedDate</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Estandarizacion</description>
+    <filter>
+        <criteriaItems>
+            <column>Seguimiento_Cliente__c.Cotice_Aqu__r$RecordType</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Lead.Prospecto_Movil</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Seguimiento_Cliente__c$Tipo_de_Producto__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Ahorro Empresarial,CDPS,Constancias de cuenta IBAN,Cuenta Batsë,Cuenta Batsë Consecionarios,Cuenta Pymes,Entrega de Tarjeta,Otros Adquirencia,PIN Digital,Reemplazo de Tarjeta,Solicitud Reporte Crediticio (SUGEF),Usuario Bancobcr</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Seguimiento_Cliente__c$Estado__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Pre Analisis,Centro de Procesamiento,Envío a Oficina,Envío BCR Directo</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Seguimiento_Cliente__c$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>Yorleny Mora Picado,Evelyn Piedra Arce,Laura Rebeca Salazar Abarca,Jorseleth Jimenez Zuñiga,Deivyd Jesus Sanchez Chavarria,Andrea Esquivel Araya,Mailyn Andrea Mena Salazar,Melissa Garro Brenes,Dayana Isabel Jimenez Valverde,Johnny Antonio Sanchez Perez,Amerilis Arce Zuniga,Jennifer Herrera Castillo,Andrea Montoya Elizondo,Julio Viales Rodriguez</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Prospectos Seguimientos</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>prospecto_con_seguimientos__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Seguimiento_Cliente__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

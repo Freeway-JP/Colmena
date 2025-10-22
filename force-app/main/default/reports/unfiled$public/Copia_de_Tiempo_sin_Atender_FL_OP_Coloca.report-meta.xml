@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>ROLLUP_DESCRIPTION</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.Tiempo_en_Solicitud_Asignada__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Tiempo estado por asignar FL OP Colocación</description>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Opportunity.Solicitud_Producto</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Secci_n_a_elegir__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>BCR Pensiones,Créditos,Cuentas y Captaciones,Cuentas y Ahorros,Soluciones para su Negocio,Tarjetas</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Producto_Solicitado_BCR_Directo__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Aumento Límite de Tarjeta de Crédito,Crédito Bienes Adquiridos,Crédito Consolidación de Deudas (Garantía Hipotecaria),Crédito Consumo,Crédito Educación – con garantía,Crédito Unificación de Deudas (Garantía Hipotecaria),Crédito Vehículo Nuevo,Crédito Vehículo Usado,Crédito Vivienda,Crédito Vivienda Sostenible,Crédito Vivienda Impulso Sostenible,Súper Crédito Deducción de Planilla,Tarjeta de Crédito Nueva</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Copia de Tiempo sin Atender FL OP Coloca</name>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

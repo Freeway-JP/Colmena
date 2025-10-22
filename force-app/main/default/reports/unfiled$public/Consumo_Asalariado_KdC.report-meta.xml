@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Identificaci_n__c</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Estado_BCR_Directo__c</field>
+    </columns>
+    <currency>CRC</currency>
+    <description>Informe Estandarización</description>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Opportunity.Solicitud_Producto</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Producto_Solicitado_BCR_Directo__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Crédito Consumo Asalariado</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Estado_BCR_Directo__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Solicitud por Asignar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Oficina_BCR_BCR_Directo__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Centro de Negocios Barreal,Ctro. Com. Plaza Rohrmorser,Desamparados,González Lahman,I.C.E.,Mall Paseo de las Flores,Moravia,Multiplaza del Este,Oxigeno,Pacayas,Paseo Metrópoli,Puriscal,San Antonio de Belén,San Isidro de Heredia,San Joaquín de Flores,San Marcos de Tarrazú,San Rafael de Heredia,Santa Ana,TerraMall,Tres Ríos,Turrialba</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity.Oficina_BCR_BCR_Directo__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Consumo Asalariado</name>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

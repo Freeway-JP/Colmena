@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Report$Owner</field>
+    </columns>
+    <columns>
+        <field>Report$Name</field>
+    </columns>
+    <columns>
+        <field>Report$Id</field>
+    </columns>
+    <columns>
+        <field>Report$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Report.DashboardComponents$Dashboard.Folder</field>
+    </columns>
+    <columns>
+        <field>Report.DashboardComponents$Dashboard</field>
+    </columns>
+    <columns>
+        <field>Report.DashboardComponents$Dashboard.CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Report.DashboardComponents$Dashboard.Id</field>
+    </columns>
+    <currency>CRC</currency>
+    <filter>
+        <criteriaItems>
+            <column>Report$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>EXPO AHORRO AUTOMATICO,EXPO BELLEZA 2017,EXPO CASA 2016 BIENES ADQUIRIDOS,EXPOCASA Y DECORACIÓN 2016</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>depuracion Infs y paneles</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Informes_con_Componentes_de_Panel__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Report$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>
