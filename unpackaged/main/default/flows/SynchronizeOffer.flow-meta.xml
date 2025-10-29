@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Validate_Financial_Viability</name>
+        <label>Validate Financial Viability</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Update_Opportunity_Field_without_VF</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default</defaultConnectorLabel>
+        <rules>
+            <name>Financial_Viabilities_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Financial_Viability</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Aproved_By_VF__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Opportunity_Field_with_VF</targetReference>
+            </connector>
+            <label>Financial Viabilities Exist</label>
+        </rules>
+    </decisions>
+    <description>When syncing the offer:
+
+The Total value is replicated in the Opportunity Amount
+The value of the % Offer Cost field is replicated in the Opportunity in the % Approved Offer Cost field
+The opportunity moves to the Validation stage</description>
+    <environments>Default</environments>
+    <interviewLabel>Synchronize Offer {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Synchronize Offer</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Financial_Viability</name>
+        <label>Get Financial Viability</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_Financial_Viability</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CS_Quote__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>FinancialViability__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Opportunity_Field_with_VF</name>
+        <label>Update Opportunity Field with VF</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>Update_opportunity_fields</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OpportunityId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>ApprovedIntermediaryCommission__c</field>
+            <value>
+                <elementReference>$Record.CS_IntermediariesCommissionApprovedVF__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ApprovedOfferCost__c</field>
+            <value>
+                <elementReference>$Record.CS_ApprovedOfferCostVF__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Opportunity_Field_without_VF</name>
+        <label>Update Opportunity Field without VF</label>
+        <locationX>314</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>Update_opportunity_fields</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OpportunityId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>ApprovedIntermediaryCommission__c</field>
+            <value>
+                <elementReference>$Record.IntermediariesCommission__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ApprovedOfferCost__c</field>
+            <value>
+                <elementReference>$Record.OfferCost__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_opportunity_fields</name>
+        <label>Update opportunity fields</label>
+        <locationX>182</locationX>
+        <locationY>731</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OpportunityId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Validación</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Financial_Viability</targetReference>
+        </connector>
+        <filterFormula>AND(
+OR(
+ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;1&#39;), 
+ ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;2&#39;)
+),
+    {!$Record.RecordType.DeveloperName} == &quot;OccupationalRisks&quot;,
+  {!$Record.IsSyncing}
+)</filterFormula>
+        <object>Quote</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>total</name>
+        <dataType>Currency</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+</Flow>

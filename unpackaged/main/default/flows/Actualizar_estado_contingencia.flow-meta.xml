@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>prueba</name>
+        <label>prueba</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Summary</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Contingencia</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Construir_el_identificador</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Es_un_indemnizaci_n_de_contingencia_vigente</name>
+        <label>Es un indemnización de contingencia vigente</label>
+        <locationX>182</locationX>
+        <locationY>647</locationY>
+        <defaultConnector>
+            <targetReference>Actualizar_estado_pendiente</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Indemnizacion_vigente</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.LossDate</leftValueReference>
+                <operator>LessThan</operator>
+                <rightValue>
+                    <elementReference>$Record.PolicyNumber.ExpirationDate</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.PolicyNumberId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue></stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Actualizar_estado</targetReference>
+            </connector>
+            <label>Indemnización vigente</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Tipo_de_registro_contingencia</name>
+        <label>Tipo de registro contingencia</label>
+        <locationX>380</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Tipo_de_registro</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Contingencia AT</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>prueba</targetReference>
+            </connector>
+            <label>Tipo de registro</label>
+        </rules>
+    </decisions>
+    <description>Identificador del claim</description>
+    <environments>Default</environments>
+    <interviewLabel>Actualizar estado contingencia {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Actualizar estado contingencia</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Actualizar_estado</name>
+        <label>Actualizar estado</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Aprobado</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Actualizar_estado_pendiente</name>
+        <label>Actualizar estado pendiente</label>
+        <locationX>314</locationX>
+        <locationY>755</locationY>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Pendiente</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Construir_el_identificador</name>
+        <label>Construir el identificador</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>Es_un_indemnizaci_n_de_contingencia_vigente</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Summary</field>
+            <value>
+                <stringValue>prueba</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>254</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Tipo_de_registro_contingencia</targetReference>
+        </connector>
+        <object>Claim</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>Identificadorindemnizacion</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{!$Record.ClaimNumber__c}</text>
+    </textTemplates>
+</Flow>

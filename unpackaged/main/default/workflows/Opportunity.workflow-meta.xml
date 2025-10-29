@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Alerta_oportunidad_cerrada_perdida</fullName>
+        <description>Alerta oportunidad cerrada perdida</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Validar_Correo_Electronico__c</field>
+            <type>email</type>
+        </recipients>
+        <senderAddress>no-responder@ext.colmenaseguros.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>Otros/prueba_1674145933683</template>
+    </alerts>
+    <alerts>
+        <fullName>Approval_Email</fullName>
+        <description>Approval Email</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-responder@ext.colmenaseguros.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>CS_ColmenaSeguros/OccupationalRiskApproval</template>
+    </alerts>
+    <alerts>
+        <fullName>Reject_Email</fullName>
+        <description>Reject Email</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-responder@ext.colmenaseguros.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>CS_ColmenaSeguros/RejectionOfOccupationalRisks</template>
+    </alerts>
+    <alerts>
+        <fullName>Solicitud_Rechazada</fullName>
+        <description>Solicitud Rechazada</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-responder@ext.colmenaseguros.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>CS_ColmenaSeguros/RejectionOfOccupationalRisks</template>
+    </alerts>
+    <alerts>
+        <fullName>Solicitud_aprobada</fullName>
+        <description>Solicitud aprobada</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-responder@ext.colmenaseguros.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>CS_ColmenaSeguros/OccupationalRiskApproval</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>ActualizarCampoAprobado</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>Aprobado</literalValue>
+        <name>Actualizar Campo Aprobado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ActualizarCampoDisenoOferta</fullName>
+        <field>StageName</field>
+        <literalValue>Diseño de Oferta</literalValue>
+        <name>Actualizar Campo Diseno Oferta</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ActualizarCampoIniciado</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>Iniciado</literalValue>
+        <name>ActualizarCampoIniciado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ActualizarCampoNoAprobado</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>No aprobado</literalValue>
+        <name>ActualizarCampoNoAprobado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>FlowInstrumentTechnical</fullName>
+        <field>ApprovalFlowName__c</field>
+        <literalValue>Instrumento Técnico</literalValue>
+        <name>Flujo Instrumento Técnico</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>FlowNameApproval</fullName>
+        <field>ApprovalFlowName__c</field>
+        <literalValue>Independientes riesgos laborales</literalValue>
+        <name>Nombre del Flujo Aprobación</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>FlowNameApprovalARLOfferValidation</fullName>
+        <field>ApprovalFlowName__c</field>
+        <literalValue>Validación Oferta ARL</literalValue>
+        <name>Nombre del Flujo Aprobación</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>OfferDesign</fullName>
+        <field>StageName</field>
+        <literalValue>Diseño de Oferta</literalValue>
+        <name>Diseño de Oferta</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>OfferPresentation</fullName>
+        <field>StageName</field>
+        <literalValue>Presentación de Oferta</literalValue>
+        <name>Presentación de Oferta</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>StartedState</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>Iniciado</literalValue>
+        <name>EstadoIniciado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>StatusApproved</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>Aprobado</literalValue>
+        <name>EstadoAprobado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>StatusNotApproved</fullName>
+        <field>ApprovalStatus__c</field>
+        <literalValue>No aprobado</literalValue>
+        <name>EstadoNoAprobado</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>UpdateStageApproved</fullName>
+        <description>The opportunity moves to the Subscription Validation stage</description>
+        <field>StageName</field>
+        <literalValue>Validación de Suscripción</literalValue>
+        <name>Update Stage Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>UpdateStageDisapproved</fullName>
+        <field>StageName</field>
+        <literalValue>Cerrada Perdida</literalValue>
+        <name>Update Stage Disapproved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>UpdateStatusApproved</fullName>
+        <field>StageName</field>
+        <literalValue>Cerrada Ganada</literalValue>
+        <name>Update Status Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>UpdateStatusRejected</fullName>
+        <field>StageName</field>
+        <literalValue>Abierta</literalValue>
+        <name>Update Status Rejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>approved_value</fullName>
+        <field>Approve_RL__c</field>
+        <literalValue>1</literalValue>
+        <name>approved value</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+</Workflow>

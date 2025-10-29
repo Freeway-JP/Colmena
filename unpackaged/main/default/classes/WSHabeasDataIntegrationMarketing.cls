@@ -7,7 +7,8 @@
  *
  * Uso en Flow:
  *  - Agregar "Apex Action" → "WSHabeasDataIntegrationMarketing.run"
- *  - Mapear entradas (firstName, lastName, documentType, numeroDocumento, email, mobile, etc.)
+ *  - Mapear entradas (firstName, lastName, documentType, numeroDocumento, email, mobile, treatmentType, etc.)
+ *  - treatmentType debe ser uno de: 'Cliente', 'Cliente Representante Legal', 'Prospecto', 'Prospecto Representante Legal'
  *
  * @author Julian Reales de la Ossa
  * @since  2025-10
@@ -34,7 +35,7 @@ public with sharing class WSHabeasDataIntegrationMarketing {
     // DTOs de entrada/salida para Flow
     // ============================================================
     public class Request {
-        @InvocableVariable(required=true)
+        @InvocableVariable(required=false)
         public String firstName;
 
         @InvocableVariable(required=false)
@@ -69,6 +70,9 @@ public with sharing class WSHabeasDataIntegrationMarketing {
 
         @InvocableVariable(required=false)
         public String contactIdNumber;
+
+        @InvocableVariable(required=true)
+        public String treatmentType;
     }
 
     public class Response {
@@ -132,6 +136,8 @@ public with sharing class WSHabeasDataIntegrationMarketing {
             throw new AuraHandledException('documentType is required');
         if (String.isBlank(r.numeroDocumento))
             throw new AuraHandledException('numeroDocumento is required');
+        if (String.isBlank(r.treatmentType))
+            throw new AuraHandledException('treatmentType is required');
     }
 
     // ============================================================
@@ -169,7 +175,7 @@ public with sharing class WSHabeasDataIntegrationMarketing {
     private static WSHabeasDataAPIDto.ConsentDto toConsent(Request r) {
         WSHabeasDataAPIDto.ConsentDto c = new WSHabeasDataAPIDto.ConsentDto();
         c.authorizationChannel = DEFAULT_AUTH_CHANNEL;
-        c.dataUsePurpose = WSHabeasDataUtilities.CLIENTE;
+        c.dataUsePurpose = r.treatmentType;
 
         // Autorizaciones por la 2300 (se crean por cada canal disponible)
         c.authorization2300 = buildAuth2300(r);

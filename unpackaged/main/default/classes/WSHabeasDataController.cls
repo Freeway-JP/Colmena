@@ -24,6 +24,8 @@ public without sharing class WSHabeasDataController {
             newRecordInd.LastName                   = params.LastName;
             newRecordInd.Suffix                     = params.SecondLastName;
             newRecordInd.engagementChannelTypeId__c = attentionChannel;
+            newRecordInd.CS_TipoIdentificacion__c   = params.identityType != null ? params.identityType : null;
+            newRecordInd.CS_NumeroIdentificacion__c = params.identityNumber != null ? params.identityNumber : null;
 
             for (WS_HabeasDataWrapper.CompaniesWrapper company : params.companies) {
                 System.debug('Company-->'+company.notEssentialFunctionalities);
@@ -216,6 +218,7 @@ public without sharing class WSHabeasDataController {
             newRecordCPCE.ContactPointId = clientEmailData[0].id;
             newRecordCPCE.CaptureDate = System.now();
             newRecordCPCE.EngagementChannelTypeId = attentionChannel;
+            newRecordCPCE.PrivacyConsentStatus = 'OptOut';
 
             for (WS_HabeasDataWrapper.CompaniesWrapper company : params.companies) {
                 System.debug('Company-->'+company.name);

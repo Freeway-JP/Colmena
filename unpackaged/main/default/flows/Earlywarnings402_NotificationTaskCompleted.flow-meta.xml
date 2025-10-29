@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>SendEmailTaskCompleted</name>
+        <label>Envio de notificación de tarea completada</label>
+        <locationX>176</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>obtainMemebersAccount.User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>noreply@salesforce.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>SubjectEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <environments>Default</environments>
+    <formulas>
+        <name>SubjectEmail</name>
+        <dataType>String</dataType>
+        <expression>&#39;Tarea: &#39; + {!$Record.Subject} + &#39; gestionada&#39;</expression>
+    </formulas>
+    <interviewLabel>402 Alertas tempranas - Notificación Tarea Completada {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>402 Alertas tempranas - Notificación Tarea Completada</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>obtainMemebersAccount</name>
+        <label>Obtener Miembros de cuenta</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>SendEmailTaskCompleted</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>TeamMemberRole</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>DIS (Director Integral de Servicio)</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_Alerta.FinServ__Account__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>AccountTeamMember</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_Alerta</name>
+        <label>Obtener Alerta</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>obtainMemebersAccount</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WhatId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>FinServ__Alert__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Obtener_Alerta</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterFormula>IF(AND(
+    {!$Record.RecordType.DeveloperName} = &#39;task402&#39;,
+    ISPICKVAL({!$Record.Status}, &#39;Completado&#39;)
+), true, false)</filterFormula>
+        <object>Task</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>emailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;Buen día, &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;Se informa que la tarea identificada con el asunto &lt;/span&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;&lt;em&gt;{!$Record.Subject}&lt;/em&gt;&lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt; relacionada al código de alerta &lt;/span&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;{!Obtener_Alerta.Name} &lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;ha sido completada con exito.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;em style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;Cordialmente,&lt;/em&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;img src=&quot;https://colmenaseguros--devsales2.sandbox.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;amp;versionId=068Nq0000052DKs&amp;amp;operationContext=DELIVERY&amp;amp;contentId=05TNq000008hp5w&amp;amp;page=0&amp;amp;d=/a/Nq000000bwJZ/bMlgX7McfTd0nCVImrcPx7QhS0Dj1xH.d0qlKCJI.WU&amp;amp;oid=00DNq000002nta5&amp;amp;dpt=null&amp;amp;viewId=&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(0, 0, 0); font-family: verdana;&quot;&gt;&lt;em&gt;Colmena Seguros&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;</text>
+    </textTemplates>
+</Flow>

@@ -1,4 +1,4 @@
-public with sharing class WSHabeasDataService {
+public without sharing class WSHabeasDataService {
     public WSHabeasDataService() {
     }
 

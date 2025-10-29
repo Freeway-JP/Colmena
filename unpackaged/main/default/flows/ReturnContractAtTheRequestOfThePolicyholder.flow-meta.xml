@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>DoesThePolicyholderWantToCancelContract</name>
+        <label>¿El tomador quiere cancelar el contrato?</label>
+        <locationX>182</locationX>
+        <locationY>287</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>1 AND 2 AND NOT(3)</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.ReasonsForReturn__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Por solicitud del tomador</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.ReasonsForReturn__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.ReasonsForReturn__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Por solicitud del tomador</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ChangestatusToContractCancellation</targetReference>
+            </connector>
+            <label>Si</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Devolver contrato por solicitud del tomador {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Devolver contrato por solicitud del tomador</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>ChangestatusToContractCancellation</name>
+        <label>Cambiar estado a Cancelación de Contrato</label>
+        <locationX>50</locationX>
+        <locationY>395</locationY>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Cancelación de Contrato</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>DoesThePolicyholderWantToCancelContract</targetReference>
+        </connector>
+        <object>Contract</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>AtTheRequestOfThePolicyholder</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Por solicitud del tomador</stringValue>
+        </value>
+    </variables>
+</Flow>

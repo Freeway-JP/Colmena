@@ -1,4 +1,4 @@
-public with sharing class WSHabeasDataExtendWrapper {
+public without sharing class WSHabeasDataExtendWrapper {
     public WSHabeasDataExtendWrapper() {
     }
 
@@ -54,7 +54,7 @@ public with sharing class WSHabeasDataExtendWrapper {
         public Boolean dataMarketing { get; set; }
         public Boolean generalCommercialOffer { get; set; }
         public Boolean generalProcessingData { get; set; }
-        public List<String> notEssentialFunctionalities;
+        public String notEssentialFunctionalities;
         public List<Auth2300> authorization2300 { get; set; }
     }
 

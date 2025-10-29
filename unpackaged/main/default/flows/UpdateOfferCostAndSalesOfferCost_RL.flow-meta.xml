@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Cambio</name>
+        <label>Cambio?</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Si</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.SubTotalPACOffer__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.TotalPACOffer__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetRelatedAccount</targetReference>
+            </connector>
+            <label>Si</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>CostOffer</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+   ({!GetRelatedAccount.TotalMonthlyAverageContributions__c} * {!$Record.CS_MonthsOfOffer__c}) &gt; 0,
+   ({!$Record.SubTotalPACOffer__c} / ({!GetRelatedAccount.TotalMonthlyAverageContributions__c} * {!$Record.CS_MonthsOfOffer__c})) * 100,
+   0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CostOfferSale</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+   ({!GetRelatedAccount.TotalMonthlyAverageContributions__c} * {!$Record.CS_MonthsOfOffer__c}) &gt; 0,
+   ({!$Record.TotalPACOffer__c} / ({!GetRelatedAccount.TotalMonthlyAverageContributions__c} * {!$Record.CS_MonthsOfOffer__c})) * 100,
+   0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>Actualizar % Costo Oferta y % Costo Oferta Venta {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Actualizar %Costo Oferta y %Costo Oferta Venta</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>GetRelatedAccount</name>
+        <label>Obtener Cuenta Relacionada</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Actualizar_registros_1</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.AccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualizar_registros_1</name>
+        <label>Actualizar Oportunidad</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <inputAssignments>
+            <field>CostOfferPercentageSale__c</field>
+            <value>
+                <elementReference>CostOfferSale</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OfferCost__c</field>
+            <value>
+                <elementReference>CostOffer</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Cambio</targetReference>
+        </connector>
+        <filterFormula>  {!$Record.RecordType.DeveloperName} == &quot;OccupationalRisks&quot;</filterFormula>
+        <object>Quote</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

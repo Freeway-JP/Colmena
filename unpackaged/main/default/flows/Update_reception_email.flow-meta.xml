@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Contador_de_contactos</name>
+        <label>Contador de contactos</label>
+        <locationX>50</locationX>
+        <locationY>863</locationY>
+        <assignmentItems>
+            <assignToReference>countContact</assignToReference>
+            <operator>AssignCount</operator>
+            <value>
+                <elementReference>Obtener_Contactos</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Validar_Si_tiene_Cuenta_Asociada</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Es_caso_de_tipo_Buzon</name>
+        <label>Es caso de tipo Buzón</label>
+        <locationX>380</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>UpdateFieldCorreoRecepcion</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Parent.Correo_de_Recepcion__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Parent.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>CS_Buzon</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.ParentId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.RelatedToId</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Obtener_Rutas_Email2case</targetReference>
+            </connector>
+            <label>Actualizar Correo de Recepción</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validar_Email_del_Contactos</name>
+        <label>Validar Email del Contactos</label>
+        <locationX>182</locationX>
+        <locationY>647</locationY>
+        <defaultConnector>
+            <targetReference>Validar_Si_tiene_Cuenta_Asociada</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Contador_de_contactos_con_mismo_correo</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Parent.ContactId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Parent.AccountId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Obtener_Contactos</targetReference>
+            </connector>
+            <label>Contador de contactos con mismo correo</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validar_Si_tiene_Cuenta_Asociada</name>
+        <label>Validar Si tiene Cuenta Asociada</label>
+        <locationX>182</locationX>
+        <locationY>1055</locationY>
+        <defaultConnectorLabel>Tiene Cuenta Asociada</defaultConnectorLabel>
+        <rules>
+            <name>Tiene_Cuenta</name>
+            <conditionLogic>1 AND (2 OR 3)</conditionLogic>
+            <conditions>
+                <leftValueReference>countContact</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <numberValue>1.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Parent.AccountId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Parent.ContactId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Obtener_Contacto</targetReference>
+            </connector>
+            <label>No Tiene Cuenta</label>
+        </rules>
+    </decisions>
+    <description>Cambios para integrar email to case con la capa media
+Se agrega Asignación automática de Cuenta, contacto y mapeo correcto de los campos de la cuenta</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Description</name>
+        <dataType>String</dataType>
+        <expression>MID(
+    $Record.Parent.Description,
+    FIND(&quot;Asunto: &quot;, $Record.Parent.Description) + LEN(&quot;Asunto: &quot;),
+    LEN($Record.Parent.Description)
+)</expression>
+    </formulas>
+    <formulas>
+        <name>FinalDescription</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    AND(
+        {!Description} != null,
+        BEGINS({!Description}, {!SubjectIntegration})
+    ),
+    TRIM(
+        MID(
+            {!Description}, 
+            LEN({!SubjectIntegration}) + 1, 
+            LEN({!Description})
+        )
+    ),
+    TRIM({!Description})
+)</expression>
+    </formulas>
+    <formulas>
+        <name>FromAddressIntegration</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    CONTAINS($Record.TextBody, &quot;|||from:&quot;),
+    IF(
+        CONTAINS(
+            MID(
+                $Record.TextBody,
+                FIND(&quot;|||from:&quot;, $Record.TextBody) + 8,
+                FIND(&quot;~~&quot;, $Record.TextBody, FIND(&quot;|||from:&quot;, $Record.TextBody)) - (FIND(&quot;|||from:&quot;, $Record.TextBody) + 8)
+            ),
+            &quot;&lt;&quot;
+        ),
+        LEFT(
+            MID(
+                $Record.TextBody,
+                FIND(&quot;|||from:&quot;, $Record.TextBody) + 8,
+                FIND(&quot;~~&quot;, $Record.TextBody, FIND(&quot;|||from:&quot;, $Record.TextBody)) - (FIND(&quot;|||from:&quot;, $Record.TextBody) + 8)
+            ),
+            FIND(&quot;&lt;&quot;, 
+                MID(
+                    $Record.TextBody,
+                    FIND(&quot;|||from:&quot;, $Record.TextBody) + 8,
+                    FIND(&quot;~~&quot;, $Record.TextBody, FIND(&quot;|||from:&quot;, $Record.TextBody)) - (FIND(&quot;|||from:&quot;, $Record.TextBody) + 8)
+                )
+            ) - 1
+        ),
+        MID(
+            $Record.TextBody,
+            FIND(&quot;|||from:&quot;, $Record.TextBody) + 8,
+            FIND(&quot;~~&quot;, $Record.TextBody, FIND(&quot;|||from:&quot;, $Record.TextBody)) - (FIND(&quot;|||from:&quot;, $Record.TextBody) + 8)
+        )
+    ),
+    &quot;&quot;
+)</expression>
+    </formulas>
+    <formulas>
+        <name>GetEmail</name>
+        <dataType>String</dataType>
+        <expression>MID(
+    {!$Record.Headers},
+    FIND(&#39;@&#39;, {!$Record.Headers}, FIND(&#39;X-SFDC-Original-RCPT:&#39;, {!$Record.Headers})) + 1,
+    LEN({!$Record.Headers}) - FIND(&#39;@&#39;, {!$Record.Headers}, FIND(&#39;X-SFDC-Original-RCPT:&#39;, {!$Record.Headers}))
+)</expression>
+    </formulas>
+    <formulas>
+        <description>Campo para obtener el asunto del correo reenviado desde Power automate</description>
+        <name>SubjectIntegration</name>
+        <dataType>String</dataType>
+        <expression>RIGHT({!$Record.Subject}, LEN({!$Record.Subject}) - 4)</expression>
+    </formulas>
+    <formulas>
+        <name>ToAddressIntegration</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    CONTAINS($Record.TextBody, &quot;~~to:&quot;),
+    IF(
+        CONTAINS(
+            MID(
+                $Record.TextBody,
+                FIND(&quot;~~to:&quot;, $Record.TextBody) + 5,
+                FIND(&quot;|&quot;, $Record.TextBody, FIND(&quot;~~to:&quot;, $Record.TextBody)) - (FIND(&quot;~~to:&quot;, $Record.TextBody) + 5)
+            ),
+            &quot;&lt;&quot;
+        ),
+        LEFT(
+            MID(
+                $Record.TextBody,
+                FIND(&quot;~~to:&quot;, $Record.TextBody) + 5,
+                FIND(&quot;|&quot;, $Record.TextBody, FIND(&quot;~~to:&quot;, $Record.TextBody)) - (FIND(&quot;~~to:&quot;, $Record.TextBody) + 5)
+            ),
+            FIND(&quot;&lt;&quot;, 
+                MID(
+                    $Record.TextBody,
+                    FIND(&quot;~~to:&quot;, $Record.TextBody) + 5,
+                    FIND(&quot;|&quot;, $Record.TextBody, FIND(&quot;~~to:&quot;, $Record.TextBody)) - (FIND(&quot;~~to:&quot;, $Record.TextBody) + 5)
+                )
+            ) - 1
+        ),
+        MID(
+            $Record.TextBody,
+            FIND(&quot;~~to:&quot;, $Record.TextBody) + 5,
+            FIND(&quot;|&quot;, $Record.TextBody, FIND(&quot;~~to:&quot;, $Record.TextBody)) - (FIND(&quot;~~to:&quot;, $Record.TextBody) + 5)
+        )
+    ),
+    &quot;&quot;
+)</expression>
+    </formulas>
+    <formulas>
+        <name>ValidateFinalDescription</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    LEN(TRIM({!FinalDescription})) &gt; 31900,
+    LEFT(TRIM({!FinalDescription}), 31900),
+    TRIM({!FinalDescription})
+)</expression>
+    </formulas>
+    <formulas>
+        <name>ValidateToAddressIntegation</name>
+        <dataType>String</dataType>
+        <expression>IF(
+{!Obtener_Rutas_Email2case.EmailServicesAddressId}!=null,
+{!Obtener_Rutas_Email2case.Address},
+{!$Label.Email_Colmena_default}
+)</expression>
+    </formulas>
+    <interviewLabel>Actualizar Correo_de_Recepcion__c {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Actualizar Correo de Recepción - Caso</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Obtener_Contacto</name>
+        <label>Obtener Contacto</label>
+        <locationX>50</locationX>
+        <locationY>1163</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Actualizar_Cuenta_del_caso</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Email</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>FromAddressIntegration</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_Contactos</name>
+        <label>Obtener Contactos</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Contador_de_contactos</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Email</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>FromAddressIntegration</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Contact</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Email</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_Rutas_Email2case</name>
+        <label>Obtener Rutas Email2case</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>UpdateEmailOrigin</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Address</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ToAddressIntegration</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>EmailRoutingAddress</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualizar_Cuenta_del_caso</name>
+        <label>Actualizar Cuenta del caso</label>
+        <locationX>50</locationX>
+        <locationY>1271</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ParentId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>AccountId</field>
+            <value>
+                <elementReference>Obtener_Contacto.AccountId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ContactId</field>
+            <value>
+                <elementReference>Obtener_Contacto.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>UpdateEmailOrigin</name>
+        <label>Actualizar Campo correo de Recepción</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>Validar_Email_del_Contactos</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ParentId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Correo_de_Recepcion__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Correo_de_Recepcion__c</field>
+            <value>
+                <elementReference>ValidateToAddressIntegation</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <elementReference>ValidateFinalDescription</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>SubjectIntegration</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>SuppliedEmail</field>
+            <value>
+                <elementReference>FromAddressIntegration</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case</object>
+    </recordUpdates>
+    <start>
+        <locationX>254</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Es_caso_de_tipo_Buzon</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ParentId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>EmailMessage</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>CreatedCase</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Cordial saludo. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Te comunicamos que tu caso radicado con el nro. {!$Record.Parent.CaseNumber}, se encuentra en proceso de atención.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;Recuerda que ante cualquier inquietud puedes comunicarte a través de los canales alternos que hemos dispuesto: nuestro Whatsapp, https://wa.me/573157003033, nuestro asesor virtual de Colmena Seguros “Mari” en https://www.colmenaseguros.com/Paginas/landing/asesor-virtual/asesor.html o comunícate&amp;nbsp;con nuestra Línea Efectiva #833 desde celular, 6014010447 en Bogotá, 01 8000 919667, en el resto del país.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt; Comprometidos con nuestra política de calidad y servicio de &quot;Satisfacer a nuestros clientes con un servicio integral de excelente calidad&quot;, estamos siempre a tu disposición para resolver tus inquietudes y requerimientos.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt; Atentamente,&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt; &lt;/span&gt;&lt;strong style=&quot;font-size: 12px;&quot;&gt;Colmena Seguros&lt;/strong&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <description>Cuanta los registros encontrados de Contacto</description>
+        <name>countContact</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+</Flow>

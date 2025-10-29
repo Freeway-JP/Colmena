@@ -1,4 +1,4 @@
-public with sharing class WSHabeasDataAPIDto {
+public without sharing class WSHabeasDataAPIDto {
     public class HabeasDataDto {
         public AccountDto account;
         public ConsentDto consent;

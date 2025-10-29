@@ -178,7 +178,8 @@ public with sharing class WSHabeasDataHistory implements Callable {
                 HistoryValidation__r.Estado__c,
                 HistoryValidation__r.Tipo__c,
                 HistoryValidation__r.Source__c,
-                HistoryValidation__r.Mensaje__c
+                HistoryValidation__r.Mensaje__c,
+                LastModifiedBy.Name
             FROM PartyConsent
             WHERE PartyId = :partyId
             ORDER BY CaptureDate DESC
@@ -347,6 +348,7 @@ public with sharing class WSHabeasDataHistory implements Callable {
         cg.OrigenValidacionIdentidad = pc.HistoryValidation__r != null ? pc.HistoryValidation__r.Source__c : null;
         cg.TipoValidacionIdentidad = pc.HistoryValidation__r != null ? pc.HistoryValidation__r.Tipo__c : null;
         cg.ResultadoValidacionIdentidad = pc.HistoryValidation__r != null ? pc.HistoryValidation__r.Mensaje__c : null;
+        cg.UltimaModificacion = pc.LastModifiedBy != null ? pc.LastModifiedBy.Name : null;
         return cg;
     }
 
@@ -485,6 +487,8 @@ public with sharing class WSHabeasDataHistory implements Callable {
 
         /** Identity validation result/message (related task record). */
         public String ResultadoValidacionIdentidad { get; set; }
+
+        public String UltimaModificacion { get; set; }
 
         // Internal accumulators (not serialized)
         /** Internal set of engagement channels for debt collection. */

@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Copia_1_de_Set_Entitlement_Name_Afinidad</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>2602</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Comercial</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copia_2_de_Set_Entitlement_Name</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>1546</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Reasegurador</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copia_2_de_Set_Entitlement_Name_Afinidad</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>2338</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Comité de Precios</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copia_3_de_Set_Entitlement_Name</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>1810</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Compañía de Asistencia</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copia_4_de_Set_Entitlement_Name</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>2074</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Gerencia Suscripción</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Entitlement_Name</name>
+        <label>Set Entitlement Name</label>
+        <locationX>50</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Análisis Suscripción</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Entitlement_Name1</name>
+        <label>Set Entitlement Name</label>
+        <locationX>314</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Análisis Reaseguro</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Entitlement_Name2</name>
+        <label>Set Entitlement Name</label>
+        <locationX>578</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Gerencia Suscripción</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Entitlement_Name3</name>
+        <label>Set Entitlement Name</label>
+        <locationX>842</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Comercial</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Entitlement_Name_Afinidad</name>
+        <label>Set Entitlement Name Afinidad</label>
+        <locationX>1282</locationX>
+        <locationY>839</locationY>
+        <assignmentItems>
+            <assignToReference>var_EntitlementName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Caso Análisis Suscripción</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Crear_Milestone_Afinidad</name>
+        <label>Crear Milestone Afinidad</label>
+        <locationX>2074</locationX>
+        <locationY>731</locationY>
+        <defaultConnector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>EstadoAnalisisSuscripcion</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Análisis Suscripción</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Entitlement_Name_Afinidad</targetReference>
+            </connector>
+            <label>Estado Análisis Suscripción</label>
+        </rules>
+        <rules>
+            <name>EstadoReasegurador</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Reasegurador</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_Set_Entitlement_Name</targetReference>
+            </connector>
+            <label>Estado Reasegurador</label>
+        </rules>
+        <rules>
+            <name>EstadoCompaniaAsistencia</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Compañía de Asistencia</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_3_de_Set_Entitlement_Name</targetReference>
+            </connector>
+            <label>Estado Compañía de Asistencia</label>
+        </rules>
+        <rules>
+            <name>EstadoGerenciaSuscripcion</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Gerencia Suscripción</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_4_de_Set_Entitlement_Name</targetReference>
+            </connector>
+            <label>Estado Gerencia Suscripción</label>
+        </rules>
+        <rules>
+            <name>EstadoComitePrecios</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Comité de Precios</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_Set_Entitlement_Name_Afinidad</targetReference>
+            </connector>
+            <label>Estado Comité de Precios</label>
+        </rules>
+        <rules>
+            <name>EstadoComercial</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Comercial</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_Set_Entitlement_Name_Afinidad</targetReference>
+            </connector>
+            <label>Estado Comercial</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>CreateMilestoneNI</name>
+        <label>Crear Milestone NI</label>
+        <locationX>578</locationX>
+        <locationY>731</locationY>
+        <defaultConnector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>SubscriptionAnalysisStatus</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Análisis Suscripción</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Entitlement_Name</targetReference>
+            </connector>
+            <label>Estado Análisis Suscripción</label>
+        </rules>
+        <rules>
+            <name>ReinsuranceAnalysisStatus</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Análisis Reaseguro</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Entitlement_Name1</targetReference>
+            </connector>
+            <label>Estado Análisis Reaseguro</label>
+        </rules>
+        <rules>
+            <name>SubscriptionManagementStatus</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Gerencia Suscripción</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Entitlement_Name2</targetReference>
+            </connector>
+            <label>Estado Gerencia Suscripción</label>
+        </rules>
+        <rules>
+            <name>CommercialStatus</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Comercial</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Entitlement_Name3</targetReference>
+            </connector>
+            <label>Estado Comercial</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>RecordTypeCase</name>
+        <label>Tipo de Registro del Caso</label>
+        <locationX>1810</locationX>
+        <locationY>623</locationY>
+        <defaultConnector>
+            <targetReference>Obtener_registros_1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Resultado_1_de_Decisi_n_3</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordTypeCase__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Validación Comercial Negocios Institucionales</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CreateMilestoneNI</targetReference>
+            </connector>
+            <label>Validación Comercial Negocios Institucionales</label>
+        </rules>
+        <rules>
+            <name>Validaci_n_Comercial_de_Afinidad</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordTypeCase__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Validación Comercial de Afinidad</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Crear_Milestone_Afinidad</targetReference>
+            </connector>
+            <label>Validación Comercial de Afinidad</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ValidationMilestone</name>
+        <label>ValidationMilestone</label>
+        <locationX>1810</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>RecordTypeCase</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No tiene</defaultConnectorLabel>
+        <rules>
+            <name>Tiene_Milestone</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.EntitlementId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Status</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>UpdateMilestone</targetReference>
+            </connector>
+            <label>Tiene Milestone</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>VarAnsFecha</name>
+        <dataType>DateTime</dataType>
+        <expression>IF(
+    VALUE(MID(TEXT({!RecordEntitlement.StartDate}), 12, 2)) &gt;= 15,
+    DATETIMEVALUE(
+        TEXT(YEAR({!RecordEntitlement.StartDate})) &amp; &quot;-&quot; &amp; 
+        TEXT(MONTH({!RecordEntitlement.StartDate})) &amp; &quot;-&quot; &amp; 
+        TEXT(DAY({!RecordEntitlement.StartDate}) + 1) &amp; &quot; 08:00:00&quot;
+    ),
+    DATETIMEVALUE(TEXT({!RecordEntitlement.StartDate}) &amp; &quot; 00:00:00&quot;)
+)</expression>
+    </formulas>
+    <interviewLabel>Assignment Milestones Cases NI Validation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Assignment Milestones Cases NI Validation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Obtener_registros_1</name>
+        <label>Get entitlement process</label>
+        <locationX>1810</locationX>
+        <locationY>1115</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>UpdateEntitlementCase</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>var_EntitlementName</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Entitlement</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>UpdateEntitlementCase</name>
+        <label>Update Entitlement Case</label>
+        <locationX>1810</locationX>
+        <locationY>1223</locationY>
+        <inputAssignments>
+            <field>EntitlementId</field>
+            <value>
+                <elementReference>Obtener_registros_1.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>UpdateMilestone</name>
+        <label>Actualizar Milestone</label>
+        <locationX>1678</locationX>
+        <locationY>431</locationY>
+        <connector>
+            <targetReference>RecordTypeCase</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CaseId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>CompletionDate</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>CompletionDate</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StartDate</field>
+            <value>
+                <elementReference>VarAnsFecha</elementReference>
+            </value>
+        </inputAssignments>
+        <object>CaseMilestone</object>
+    </recordUpdates>
+    <start>
+        <locationX>1684</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>ValidationMilestone</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>RecordTypeCase__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Validación Comercial Negocios Institucionales</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeCase__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Validación Comercial de Afinidad</stringValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>RecordEntitlement</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Entitlement</objectType>
+    </variables>
+    <variables>
+        <name>var_EntitlementName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Mensaje_de_error_personalizado_1</name>
+        <label>Mensaje de error personalizado 1</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <customErrorMessages>
+            <errorMessage>Esta oferta ya ha sido aprobada y no puede ser modificada.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <description>Block the offer after being approved</description>
+    <environments>Default</environments>
+    <interviewLabel>OfferBlock {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>OfferBlock</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Mensaje_de_error_personalizado_1</targetReference>
+        </connector>
+        <filterFormula>AND(
+OR(
+ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;1&#39;), 
+ ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;2&#39;)
+),
+{!$Record.RecordType.DeveloperName} == &quot;OccupationalRisks&quot;,
+ISPICKVAL({!$Record.Status}, &quot;Aprobada&quot;),
+NOT(ISCHANGED({!$Record.Status})), 
+NOT(ISCHANGED({!$Record.IsSyncing})),
+NOT(ISCHANGED({!$Record.IntermediariesCommission__c})),
+NOT(ISCHANGED({!$Record.OfferCost__c}))
+)</filterFormula>
+        <object>Quote</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

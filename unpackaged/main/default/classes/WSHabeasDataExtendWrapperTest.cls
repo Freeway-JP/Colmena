@@ -38,7 +38,6 @@ private class WSHabeasDataExtendWrapperTest {
             c1.dataMarketing = false;
             c1.generalCommercialOffer = true;
             c1.generalProcessingData = true;
-            c1.notEssentialFunctionalities = new List<String>{ 'A', 'B' };
             if (with2300) {
                 c1.authorization2300 = new List<WSHabeasDataExtendWrapper.Auth2300>();
                 WSHabeasDataExtendWrapper.Auth2300 a1 = new WSHabeasDataExtendWrapper.Auth2300();
@@ -97,8 +96,6 @@ private class WSHabeasDataExtendWrapperTest {
         System.assertEquals(false, d.companies[0].dataMarketing);
         System.assertEquals(true, d.companies[0].generalCommercialOffer);
         System.assertEquals(true, d.companies[0].generalProcessingData);
-        System.assertEquals(2, d.companies[0].notEssentialFunctionalities.size());
-        System.assertEquals('A', d.companies[0].notEssentialFunctionalities[0]);
         System.assertEquals(1, d.companies[0].authorization2300.size());
         System.assertEquals(true, d.companies[0].authorization2300[0].value);
         System.assertEquals('EMAIL', d.companies[0].authorization2300[0].contactPointType);

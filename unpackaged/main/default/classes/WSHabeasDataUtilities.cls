@@ -1,4 +1,4 @@
-public with sharing class WSHabeasDataUtilities {
+public without sharing class WSHabeasDataUtilities {
     //Constants
     public static final String RECORD_TYPE_NATURAL_PERSON = 'Cuenta Personal';
     public static final String RECORD_TYPE_LEGAL_ACCOUNT = 'Cuenta Jurídica';
@@ -8,6 +8,7 @@ public with sharing class WSHabeasDataUtilities {
     public static final String RECORD_TYPE_LEGAL_PERSON_LEAD = 'Persona Jurídica';
     public static final String RECORD_TYPE_GENERAL_CONTACT = 'IndustriesBusiness';
     public static final String SALES_PROCESS = 'Venta';
+    public static final String NOV_PROCESS = 'Novedad';
     public static final String DEBT_COLLECT = 'Gestión Cartera-2300';
     public static final String DATA_MARKETING = 'Ofrecimiento Comercial-2300';
     public static final String PRIVACY_STATUS_OPT_IN = 'OptIn';
@@ -15,6 +16,7 @@ public with sharing class WSHabeasDataUtilities {
     public static final String PRIVACY_STATUS_NO_STATUS = 'NotSeen';
     public static final String IDENTITY_VALIDATION_SOURCE_MANUAL = 'Manual';
     public static final String CONTACT_POINT_TYPE_EMAIL = 'correo electrónico';
+    public static final String UPD_VALIDATOR = '-1';
 
     public static List<String> CONTACT_MANDATORY_FIELDS = new List<String>{ 'contactFirstName', 'contactLastName', 'contactIdType', 'contactIdNumber' };
 

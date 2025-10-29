@@ -9,7 +9,7 @@
  * ==============================================================================================================================
  */
 @RestResource(urlMapping='/v2/WSHabeasData/*')
-global with sharing class WSHabeasDataRest {
+global without sharing class WSHabeasDataRest {
     public WSHabeasDataRest() {
     }
 

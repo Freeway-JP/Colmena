@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>ErrorMessage0</name>
+        <label>ErrorMessage0</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <customErrorMessages>
+            <errorMessage>Los campos Empleados, Activos fijos e Ingresos de facturación no pueden tener un valor de 0</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
+        <name>ErrorMessageEmpty</name>
+        <label>ErrorMessageEmpty</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <customErrorMessages>
+            <errorMessage>Debe diligenciar los campos Empleados, Activos fijos e Ingresos de facturación.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>AccountFieldValidation</name>
+        <label>Validación Campos Cuentas</label>
+        <locationX>314</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Emptyfields</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.FixedAssets__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.BillingIncome__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.NumberOfEmployees</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ErrorMessageEmpty</targetReference>
+            </connector>
+            <label>Campos Vacios</label>
+        </rules>
+        <rules>
+            <name>Campos_Valor_0</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.NumberOfEmployees</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Valor0</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ErrorMessage0</targetReference>
+            </connector>
+            <label>Campos Valor 0</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Error Campos Cuenta {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Error Campos Cuenta</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>188</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>AccountFieldValidation</targetReference>
+        </connector>
+        <filterFormula>AND (
+{!$Record.RecordType.Name} = &#39;Cuenta Jurídica&#39;,
+!ISCHANGED({!$Record.LeadConvertedFlag__c}),
+OR(
+        ISPICKVAL({!$Record.FixedAssets__c},&#39; &#39;),
+        ISPICKVAL({!$Record.BillingIncome__c},&#39; &#39;),
+        ISBLANK({!$Record.NumberOfEmployees}) || {!$Record.NumberOfEmployees} = 0
+),
+       {!$Record.LeadConvertedFlag__c} = false
+)</filterFormula>
+        <object>Account</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>Valor0</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+</Flow>

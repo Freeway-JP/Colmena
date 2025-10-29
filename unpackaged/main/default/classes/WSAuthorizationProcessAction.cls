@@ -140,16 +140,23 @@ global without sharing class WSAuthorizationProcessAction implements Callable {
 
     private List<WSHabeasDataExtendWrapper.CompanyDTO> processCompaniesDirectly(Map<String, Object> input) {
         List<WSHabeasDataExtendWrapper.CompanyDTO> companies = new List<WSHabeasDataExtendWrapper.CompanyDTO>();
-        
+
+        // Obtener UsePurpose desde GeneralInformation
+        Map<String, Object> generalInfo = (Map<String, Object>) input.get('GeneralInformation');
+        String usePurpose = generalInfo != null ? (String) generalInfo.get('UsePurpose') : null;
+
         // Obtener los nodos, manejando cadenas vacías como null
         Map<String, Object> lifeInsurance = getMapFromObject(input.get('LifeInsurance'));
         Map<String, Object> arl = getMapFromObject(input.get('ARL'));
         Map<String, Object> general = getMapFromObject(input.get('General'));
-        
+
         // Aplicar validación para GeneralCommercialOffer en nodos null
         applyGeneralCommercialOfferValidation(input);
-        
-        // Actualizar referencias después de la validación
+
+        // Aplicar validación para ProcessingGeneralData cuando UsePurpose es 'Prospecto'
+        applyProcessingGeneralDataValidation(input, usePurpose);
+
+        // Actualizar referencias después de las validaciones
         lifeInsurance = getMapFromObject(input.get('LifeInsurance'));
         arl = getMapFromObject(input.get('ARL'));
         general = getMapFromObject(input.get('General'));
@@ -231,8 +238,57 @@ global without sharing class WSAuthorizationProcessAction implements Callable {
 
         // Establecer GeneralCommercialOffer con el valor determinado
         companyNode.put(generalCommercialOfferField, generalCommercialOfferValue);
+        companyNode.put('notEssentialFunctionalities', WSHabeasDataUtilities.UPD_VALIDATOR);
 
         return companyNode;
+    }
+
+    private void applyProcessingGeneralDataValidation(Map<String, Object> input, String usePurpose) {
+        // Solo aplicar validación si UsePurpose es 'Prospecto' o 'Prospecto Representante Legal'
+        if (usePurpose != 'Prospecto' && usePurpose != 'Prospecto Representante Legal') {
+            return;
+        }
+
+        Map<String, Object> lifeInsurance = getMapFromObject(input.get('LifeInsurance'));
+        Map<String, Object> arl = getMapFromObject(input.get('ARL'));
+        Map<String, Object> general = getMapFromObject(input.get('General'));
+
+        Boolean hasProcessingGeneralDataTrue = false;
+
+        // Verificar si alguno de los nodos no-null tiene ProcessingGeneralData en true
+        if (lifeInsurance != null && lifeInsurance.get('ProcessingGeneralDataLI') == true) {
+            hasProcessingGeneralDataTrue = true;
+        }
+        if (arl != null && arl.get('ProcessingGeneralDataARL') == true) {
+            hasProcessingGeneralDataTrue = true;
+        }
+        if (general != null && general.get('ProcessingGeneralDataGeneral') == true) {
+            hasProcessingGeneralDataTrue = true;
+        }
+
+        // Si alguno tiene ProcessingGeneralData en true, crear los nodos faltantes con true
+        if (hasProcessingGeneralDataTrue) {
+            if (lifeInsurance == null) {
+                lifeInsurance = createDefaultCompanyNode(input, 'LifeInsurance', 'ProcessingGeneralDataLI', true);
+                input.put('LifeInsurance', lifeInsurance);
+            } else if (lifeInsurance.get('ProcessingGeneralDataLI') == null) {
+                lifeInsurance.put('ProcessingGeneralDataLI', true);
+            }
+
+            if (arl == null) {
+                arl = createDefaultCompanyNode(input, 'ARL', 'ProcessingGeneralDataARL', true);
+                input.put('ARL', arl);
+            } else if (arl.get('ProcessingGeneralDataARL') == null) {
+                arl.put('ProcessingGeneralDataARL', true);
+            }
+
+            if (general == null) {
+                general = createDefaultCompanyNode(input, 'General', 'ProcessingGeneralDataGeneral', true);
+                input.put('General', general);
+            } else if (general.get('ProcessingGeneralDataGeneral') == null) {
+                general.put('ProcessingGeneralDataGeneral', true);
+            }
+        }
     }
 
     private Boolean shouldProcessCompany(Map<String, Object> companyData, String authorizeField, String generalCommercialOfferField) {
@@ -315,6 +371,7 @@ global without sharing class WSAuthorizationProcessAction implements Callable {
         company.dataMarketing = (Boolean) companyData.get(config.dataMarketingField);
         company.generalCommercialOffer = (Boolean) companyData.get(config.generalCommercialOfferField);
         company.generalProcessingData = (Boolean) companyData.get(config.generalProcessingDataField);
+        company.notEssentialFunctionalities = (String) companyData.get('notEssentialFunctionalities');
         
         // Process authorization2300 sections
         String commercialOfferSection = 'CommercialOfferSection' + config.suffix;

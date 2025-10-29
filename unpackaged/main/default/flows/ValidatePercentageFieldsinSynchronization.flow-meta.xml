@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Desmarcar_Sincronizaci_n</name>
+        <label>Desmarcar Sincronización</label>
+        <locationX>50</locationX>
+        <locationY>611</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.IsSyncing</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Error_en_Porcentajes_de_Costos_y_Comisiones</targetReference>
+        </connector>
+    </assignments>
+    <customErrors>
+        <name>Error_en_Porcentajes_de_Costos_y_Comisiones</name>
+        <label>Error en Porcentajes de Costos y Comisiones</label>
+        <locationX>50</locationX>
+        <locationY>719</locationY>
+        <customErrorMessages>
+            <errorMessage>Los porcentajes de Costo de Oferta y Comisión de Intermediarios no pueden exceder los valores aprobados en la Viabilidad Financiera. Por favor, ajuste los valores para continuar con la sincronización.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Fue_aprobado_por_VF</name>
+        <label>¿Fue aprobado por VF?</label>
+        <locationX>336</locationX>
+        <locationY>395</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Si</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Financial_Viability</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Aproved_By_VF__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Se_debe_mostrar_alerta</targetReference>
+            </connector>
+            <label>Si</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Se_debe_mostrar_alerta</name>
+        <label>¿Se debe mostrar alerta?</label>
+        <locationX>182</locationX>
+        <locationY>503</locationY>
+        <defaultConnectorLabel>Cumple con la condición</defaultConnectorLabel>
+        <rules>
+            <name>Mostrar_alerta</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.OfferCost__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>$Record.CS_ApprovedOfferCostVF__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.IntermediariesCommission__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>$Record.CS_IntermediariesCommissionApprovedVF__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Desmarcar_Sincronizaci_n</targetReference>
+            </connector>
+            <label>Mostrar alerta</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Validar Campos Porcentajes en Sincronización {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Validar Campos Porcentajes en Sincronización</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Financial_Viability</name>
+        <label>Obtener Viabilidad Financiera</label>
+        <locationX>336</locationX>
+        <locationY>287</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Fue_aprobado_por_VF</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CS_Quote__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>FinancialViability__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Financial_Viability</targetReference>
+        </connector>
+        <filterFormula>AND(
+OR(
+ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;1&#39;), 
+ ISPICKVAL({!$Record.Opportunity.Account.CS_TipoNegocio__c}, &#39;2&#39;)
+),
+    {!$Record.RecordType.DeveloperName} == &quot;OccupationalRisks&quot;,
+  {!$Record.IsSyncing}
+)</filterFormula>
+        <object>Quote</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

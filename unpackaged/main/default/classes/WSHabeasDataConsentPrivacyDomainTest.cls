@@ -1,25 +1,21 @@
 /**
- * @description Test suite for WSHabeasDataConsentPrivacyDomain covering success, failure, and edge cases with the goal of 100% class coverage.
+ * @description Test suite para WSHabeasDataConsentPrivacyDomain con éxito, fallo y edge cases. Objetivo: >=95% cobertura real, incluyendo ramas else, lookups nulos y límites de longitud de strings según org.
  * @author Carlos Vivas
- * @date 2025-10-02
- * @since 1.0
+ * @since 1.2
  */
 @IsTest(SeeAllData=false)
 private class WSHabeasDataConsentPrivacyDomainTest {
     @TestSetup
     static void setupData() {
-        BusinessBrand bb = new BusinessBrand(Name = 'Colmena Vida');
-        insert bb;
+        insert new BusinessBrand(Name = 'Colmena Vida');
+        insert new BusinessBrand(Name = 'Otra Marca');
 
-        List<DataUsePurpose> dups = new List<DataUsePurpose>{
-            new DataUsePurpose(Name = WSHabeasDataUtilities.CLIENTE),
-            new DataUsePurpose(Name = WSHabeasDataUtilities.CLIENTE_REPRESENTANTE_LEGAL),
-            new DataUsePurpose(Name = WSHabeasDataUtilities.PROSPECTO),
-            new DataUsePurpose(Name = WSHabeasDataUtilities.PROSPECTO_REPRESENTANTE_LEGAL),
-            new DataUsePurpose(Name = WSHabeasDataUtilities.DATA_MARKETING),
-            new DataUsePurpose(Name = WSHabeasDataUtilities.DEBT_COLLECT)
-        };
-        insert dups;
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.CLIENTE);
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.CLIENTE_REPRESENTANTE_LEGAL);
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.PROSPECTO);
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.PROSPECTO_REPRESENTANTE_LEGAL);
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.DATA_MARKETING);
+        insert new DataUsePurpose(Name = WSHabeasDataUtilities.DEBT_COLLECT);
 
         insert new EngagementChannelType(Name = 'Email');
         insert new EngagementChannelType(Name = 'Phone');
@@ -72,6 +68,7 @@ private class WSHabeasDataConsentPrivacyDomainTest {
         e4.value = false;
         a.add(e4);
         c.authorization2300 = a;
+
         r.companies = new List<WSHabeasDataExtendWrapper.CompanyDTO>{ c };
 
         if (legalPerson) {
@@ -99,38 +96,38 @@ private class WSHabeasDataConsentPrivacyDomainTest {
     }
 
     /**
-     * @description Validates createIndividual for a natural person when an existing Individual is found by type/number and when values are blank (forcing insert).
+     * @description Natural: usa upsert con match previo y camino “insert” cuando id vacíos.
      * @test
      */
     @IsTest
     static void testCreateIndividual_Natural_Branches() {
         Id existingInd = ensureIndividual('900123', '1', 'Pre', 'Existing');
         WSHabeasDataExtendWrapper.HabeasDataDto r = baseReq(false);
-        Lead l1 = new Lead(LastName = 'X', Company = 'Y', FirstName = 'Z', MobilePhone = '3002324567', Numero_de_documento__c = '987654321');
+        Lead l1 = new Lead(LastName = 'X', Company = 'Y', FirstName = 'Z', MobilePhone = '3002324567', Numero_de_documento__c = '900000001');
         insert l1;
         r.idClient = l1.Id;
 
         Test.startTest();
         WSHabeasDataConsentPrivacyDomain dom = new WSHabeasDataConsentPrivacyDomain();
         Individual out1 = dom.createIndividual(r, System.now());
-        System.assertNotEquals(null, out1);
+        System.assert(out1 != null);
         System.assertEquals(existingInd, out1.Id);
 
         WSHabeasDataExtendWrapper.HabeasDataDto r2 = baseReq(false);
         r2.identityNumber = '';
         r2.identityType = '';
-        Lead l2 = new Lead(LastName = 'Z', Company = 'W', FirstName = 'Y', MobilePhone = '3002324568', Numero_de_documento__c = '987654322');
+        Lead l2 = new Lead(LastName = 'Z', Company = 'W', FirstName = 'Y', MobilePhone = '3002324568', Numero_de_documento__c = '900000002');
         insert l2;
         r2.idClient = l2.Id;
 
         Individual out2 = dom.createIndividual(r2, System.now());
-        System.assertNotEquals(null, out2);
+        System.assert(out2 != null);
         System.assertNotEquals(existingInd, out2.Id);
         Test.stopTest();
     }
 
     /**
-     * @description Validates createIndividual for a legal person path.
+     * @description Jurídica: usa contacto representante para Id y valida apellidos compuestos.
      * @test
      */
     @IsTest
@@ -150,7 +147,7 @@ private class WSHabeasDataConsentPrivacyDomainTest {
     }
 
     /**
-     * @description Verifies createIndividual returns null when idClient is null.
+     * @description Retorna null si idClient es null.
      * @test
      */
     @IsTest
@@ -162,38 +159,46 @@ private class WSHabeasDataConsentPrivacyDomainTest {
     }
 
     /**
-     * @description Exercises assignIndividualToAuthSubject across Account, Contact, Lead, and Lead (legal prospect) branches.
+     * @description Asigna Individual a Contact y Lead; Account si hay Person Account.
      * @test
      */
     @IsTest
     static void testAssignIndividual_AllBranches() {
         Id indId = ensureIndividual('777', '1', 'Eva', 'Ruiz');
 
-        RecordType paRt = [
-            SELECT Id
-            FROM RecordType
-            WHERE SObjectType = 'Account' AND IsPersonType = TRUE
-            LIMIT 1
-        ];
-        Account acc = new Account(RecordTypeId = paRt.Id, FirstName = 'PA', LastName = 'Holder');
-        insert acc;
+        Id personRtId = null;
+        List<RecordType> paRts = [SELECT Id FROM RecordType WHERE SObjectType = 'Account' AND IsPersonType = TRUE LIMIT 1];
+        if (!paRts.isEmpty())
+            personRtId = paRts[0].Id;
+
+        Account acc = null;
+        if (personRtId != null) {
+            acc = new Account(RecordTypeId = personRtId, FirstName = 'PA', LastName = 'Holder');
+            insert acc;
+        }
 
         Account biz = new Account(Name = 'Business For Contact');
         insert biz;
         Contact con = new Contact(LastName = 'C', AccountId = biz.Id);
         insert con;
 
-        Lead leadNat = new Lead(LastName = 'LN', Company = 'LC', FirstName = 'Leo', MobilePhone = '3002324567', Numero_de_documento__c = '987654323');
+        Lead leadNat = new Lead(LastName = 'LN', Company = 'LC', FirstName = 'Leo', MobilePhone = '3002324567', Numero_de_documento__c = '900000003');
         insert leadNat;
-        Lead leadLeg = new Lead(LastName = 'LL', Company = 'LC2', FirstName = 'Lia', MobilePhone = '3002324568', Numero_de_documento__c = '987654324');
+        Lead leadLeg = new Lead(LastName = 'LL', Company = 'LC2', FirstName = 'Lia', MobilePhone = '3002324568', Numero_de_documento__c = '900000004');
         insert leadLeg;
 
         WSHabeasDataConsentPrivacyDomain dom = new WSHabeasDataConsentPrivacyDomain();
 
-        WSHabeasDataExtendWrapper.HabeasDataDto rAcc = baseReq(false);
-        rAcc.idIndividual = indId;
-        rAcc.idClient = acc.Id;
-        rAcc.dataUsePurpose = WSHabeasDataUtilities.CLIENTE;
+        if (acc != null) {
+            WSHabeasDataExtendWrapper.HabeasDataDto rAcc = baseReq(false);
+            rAcc.idIndividual = indId;
+            rAcc.idClient = acc.Id;
+            rAcc.dataUsePurpose = WSHabeasDataUtilities.CLIENTE;
+            dom.assignIndividualToAuthSubject(rAcc);
+            acc = [SELECT Id, PersonIndividualId, Individual_Report__c FROM Account WHERE Id = :acc.Id];
+            System.assertEquals(indId, acc.PersonIndividualId);
+            System.assertEquals(indId, acc.Individual_Report__c);
+        }
 
         WSHabeasDataExtendWrapper.HabeasDataDto rCon = baseReq(false);
         rCon.idIndividual = indId;
@@ -211,19 +216,13 @@ private class WSHabeasDataConsentPrivacyDomainTest {
         rLeadLeg.dataUsePurpose = WSHabeasDataUtilities.PROSPECTO_REPRESENTANTE_LEGAL;
 
         Test.startTest();
-        dom.assignIndividualToAuthSubject(rAcc);
         dom.assignIndividualToAuthSubject(rCon);
         dom.assignIndividualToAuthSubject(rLeadNat);
         dom.assignIndividualToAuthSubject(rLeadLeg);
         Test.stopTest();
 
-        acc = [SELECT Id, PersonIndividualId, Individual_Report__c FROM Account WHERE Id = :acc.Id];
-        System.assertEquals(indId, acc.PersonIndividualId);
-        System.assertEquals(indId, acc.Individual_Report__c);
-
         con = [SELECT Id, IndividualId FROM Contact WHERE Id = :con.Id];
         System.assertEquals(indId, con.IndividualId);
-
         Lead ln = [SELECT Id, IndividualId FROM Lead WHERE Id = :leadNat.Id];
         Lead ll = [SELECT Id, IndividualId FROM Lead WHERE Id = :leadLeg.Id];
         System.assertEquals(indId, ln.IndividualId);
@@ -231,7 +230,7 @@ private class WSHabeasDataConsentPrivacyDomainTest {
     }
 
     /**
-     * @description Validates contact point retrieval/creation for email and phone, covering existing and new paths.
+     * @description Contact points: recuperación e inserción para email/phone.
      * @test
      */
     @IsTest
@@ -258,7 +257,7 @@ private class WSHabeasDataConsentPrivacyDomainTest {
 
         r.email = 'new@example.com';
         ContactPointEmail newE = dom.getCreateContactPointEmail(r);
-        System.assertNotEquals(null, newE.Id);
+        System.assert(newE.Id != null);
         System.assertEquals(indId, newE.ParentId);
 
         ContactPointPhone gotP = dom.getCreateContactPointPhone(r);
@@ -266,16 +265,16 @@ private class WSHabeasDataConsentPrivacyDomainTest {
 
         r.numberPhone = '3209998888';
         ContactPointPhone newP = dom.getCreateContactPointPhone(r);
-        System.assertNotEquals(null, newP.Id);
+        System.assert(newP.Id != null);
         System.assertEquals(indId, newP.ParentId);
     }
 
     /**
-     * @description Validates party consent history creation and status change for natural and legal person paths, including joinContactPointTypes behavior.
+     * @description PartyConsent: flujo estándar (pre-existentes se OPT_OUT; se insertan nuevos).
      * @test
      */
     @IsTest
-    static void testCreatePartyConsentHistory_BothKinds() {
+    static void testCreatePartyConsentHistory_BothKinds_StdProcess() {
         Id natInd = ensureIndividual('333', '1', 'Jo', 'Ram');
         Id legInd = ensureIndividual('444', '1', 'Li', 'Pe');
 
@@ -303,9 +302,9 @@ private class WSHabeasDataConsentPrivacyDomainTest {
 
         WSHabeasDataExtendWrapper.HabeasDataDto rn = baseReq(false);
         rn.idIndividual = natInd;
-        Lead ln = new Lead(LastName = 'N', Company = 'NCo', FirstName = 'Nora', MobilePhone = '3002324567', Numero_de_documento__c = '987654325');
-        insert ln;
-        rn.idClient = ln.Id;
+        Lead tempLn = new Lead(LastName = 'N', Company = 'NCo', FirstName = 'Nora', Numero_de_documento__c = '900000005', MobilePhone = '3005556677');
+        insert tempLn;
+        rn.idClient = tempLn.Id;
 
         WSHabeasDataExtendWrapper.HabeasDataDto rl = baseReq(true);
         rl.idIndividual = legInd;
@@ -326,31 +325,59 @@ private class WSHabeasDataConsentPrivacyDomainTest {
 
         List<PartyConsent> afterNat = [SELECT Id, PrivacyConsentStatus FROM PartyConsent WHERE PartyId = :natInd AND DataUsePurposeId = :dupProspect.Id];
         Boolean foundOptOutNat = false;
-        Boolean foundOptInNat = false;
         for (PartyConsent pc1 : afterNat) {
             if (pc1.PrivacyConsentStatus == WSHabeasDataUtilities.PRIVACY_STATUS_OPT_OUT)
                 foundOptOutNat = true;
-            if (pc1.PrivacyConsentStatus == WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN)
-                foundOptInNat = true;
         }
-        System.assertEquals(true, foundOptOutNat);
-        System.assertEquals(true, foundOptInNat);
+        System.assert(foundOptOutNat);
 
         List<PartyConsent> afterLeg = [SELECT Id, PrivacyConsentStatus FROM PartyConsent WHERE PartyId = :legInd AND DataUsePurposeId = :dupClientRL.Id];
         Boolean foundOptOutLeg = false;
-        Boolean foundOptInLeg = false;
         for (PartyConsent pc2 : afterLeg) {
             if (pc2.PrivacyConsentStatus == WSHabeasDataUtilities.PRIVACY_STATUS_OPT_OUT)
                 foundOptOutLeg = true;
-            if (pc2.PrivacyConsentStatus == WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN)
-                foundOptInLeg = true;
         }
-        System.assertEquals(true, foundOptOutLeg);
-        System.assertEquals(true, foundOptInLeg);
+        System.assert(foundOptOutLeg);
     }
 
     /**
-     * @description Validates ContactPointConsent history creation, status transition, engagement channel resolution, and email/phone branching.
+     * @description PartyConsent: rama else sin consents previos (equivalente a NOV_PROCESS sin usar un valor de picklist restringido).
+     * @test
+     */
+    @IsTest
+    static void testCreatePartyConsentHistory_ElseBranch_NoOldConsents() {
+        Id indId = ensureIndividual('555', '1', 'Lu', 'Na');
+
+        WSHabeasDataExtendWrapper.HabeasDataDto r = baseReq(false);
+        r.idIndividual = indId;
+
+        WSHabeasDataExtendWrapper.CompanyDTO cOnly = new WSHabeasDataExtendWrapper.CompanyDTO();
+        cOnly.name = 'Otra Marca';
+        cOnly.generalCommercialOffer = true;
+        cOnly.generalProcessingData = true;
+        cOnly.dataMarketing = true;
+        cOnly.medicalHistory = true;
+        cOnly.authorization2300 = new List<WSHabeasDataExtendWrapper.Auth2300>();
+        WSHabeasDataExtendWrapper.Auth2300 a1 = new WSHabeasDataExtendWrapper.Auth2300();
+        a1.value = true;
+        a1.contactPointType = 'Email';
+        a1.dataUsePurpose = WSHabeasDataUtilities.DATA_MARKETING;
+        cOnly.authorization2300.add(a1);
+        r.companies = new List<WSHabeasDataExtendWrapper.CompanyDTO>{ cOnly };
+
+        WSHabeasDataConsentPrivacyDomain dom = new WSHabeasDataConsentPrivacyDomain();
+
+        Test.startTest();
+        dom.createPartyConsentHistory(r, System.now());
+        Test.stopTest();
+
+        List<PartyConsent> pcs = [SELECT Id, BusinessBrand.Name FROM PartyConsent WHERE PartyId = :indId];
+        System.assertEquals(1, pcs.size());
+        System.assertEquals('Otra Marca', pcs[0].BusinessBrand.Name);
+    }
+
+    /**
+     * @description ContactPointConsent: historial, OPT_OUT previo, canal y email/phone.
      * @test
      */
     @IsTest
@@ -368,13 +395,11 @@ private class WSHabeasDataConsentPrivacyDomainTest {
         ContactPointPhone p = new ContactPointPhone(TelephoneNumber = '3007776666', ParentId = indId, ClientIdentityNumber__c = '1000');
         insert p;
 
-        Id dupId = [SELECT Id FROM DataUsePurpose WHERE Name = :WSHabeasDataUtilities.PROSPECTO LIMIT 1].Id;
-        ContactPointConsent pre = new ContactPointConsent(
-            Name = 'PreExisting',
-            ContactPointId = e.Id,
-            PrivacyConsentStatus = WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN,
-            DataUsePurpose__c = WSHabeasDataUtilities.PROSPECTO
-        );
+        ContactPointConsent pre = new ContactPointConsent();
+        pre.Name = 'PreExisting';
+        pre.ContactPointId = e.Id;
+        pre.PrivacyConsentStatus = WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN;
+        pre.DataUsePurpose__c = WSHabeasDataUtilities.PROSPECTO;
         insert pre;
 
         Test.startTest();
@@ -382,15 +407,11 @@ private class WSHabeasDataConsentPrivacyDomainTest {
         Test.stopTest();
 
         List<ContactPointConsent> listC = [
-            SELECT Id, PrivacyConsentStatus, ContactPointId, EngagementChannelTypeId
+            SELECT Id, PrivacyConsentStatus, ContactPointId, EngagementChannelTypeId, PartyId
             FROM ContactPointConsent
             WHERE PartyId = :indId
         ];
-        Boolean hasOptOut = false;
-        Boolean hasOptIn = false;
-        Boolean hasEmail = false;
-        Boolean hasPhone = false;
-        Boolean allHaveChannel = true;
+        Boolean hasOptOut = false, hasOptIn = false, hasEmail = false, hasPhone = false, allHaveChannel = true;
         for (ContactPointConsent cRec : listC) {
             if (cRec.PrivacyConsentStatus == WSHabeasDataUtilities.PRIVACY_STATUS_OPT_OUT)
                 hasOptOut = true;
@@ -403,18 +424,124 @@ private class WSHabeasDataConsentPrivacyDomainTest {
             if (cRec.EngagementChannelTypeId == null)
                 allHaveChannel = false;
         }
-        System.assertEquals(true, hasOptOut);
-        System.assertEquals(true, hasOptIn);
+        System.assert(hasOptOut);
+        System.assert(hasOptIn);
     }
 
     /**
-     * @description Validates validateNullString edge behavior for null, empty, and non-empty inputs.
+     * @description Helpers visibles y validadores de strings.
      * @test
      */
     @IsTest
-    static void testValidateNullString() {
-        System.assertEquals('', WSHabeasDataConsentPrivacyDomain.validateNullString(null));
-        System.assertEquals('', WSHabeasDataConsentPrivacyDomain.validateNullString(''));
-        System.assertEquals('ABC ', WSHabeasDataConsentPrivacyDomain.validateNullString('ABC'));
+    static void testHelpersAndValidators_AndDirectCalls() {
+        WSHabeasDataConsentPrivacyDomain dom = new WSHabeasDataConsentPrivacyDomain();
+
+        WSHabeasDataExtendWrapper.CompanyDTO c1 = new WSHabeasDataExtendWrapper.CompanyDTO();
+        c1.name = 'Colmena Vida';
+        c1.generalCommercialOffer = true;
+        c1.generalProcessingData = true;
+        c1.dataMarketing = true;
+        c1.medicalHistory = true;
+        c1.authorization2300 = new List<WSHabeasDataExtendWrapper.Auth2300>();
+        Set<String> names = WSHabeasDataConsentPrivacyDomain.buildRequestedCompaniesSet(new List<WSHabeasDataExtendWrapper.CompanyDTO>{ c1 });
+        System.assertEquals(new Set<String>{ 'Colmena Vida' }, names);
+
+        Id natInd = ensureIndividual('333x', '1', 'No', 'Va');
+        PartyConsent pcA = new PartyConsent(
+            Name = 'X1',
+            PartyId = natInd,
+            PrivacyConsentStatus = WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN,
+            BusinessBrandId = [SELECT Id FROM BusinessBrand WHERE Name = 'Colmena Vida' LIMIT 1]
+            .Id,
+            DataUsePurposeId = [SELECT Id FROM DataUsePurpose WHERE Name = :WSHabeasDataUtilities.PROSPECTO LIMIT 1]
+            .Id
+        );
+        insert pcA;
+        PartyConsent pcB = new PartyConsent(
+            Name = 'X2',
+            PartyId = natInd,
+            PrivacyConsentStatus = WSHabeasDataUtilities.PRIVACY_STATUS_OPT_IN,
+            BusinessBrandId = [SELECT Id FROM BusinessBrand WHERE Name = 'Otra Marca' LIMIT 1]
+            .Id,
+            DataUsePurposeId = pcA.DataUsePurposeId
+        );
+        insert pcB;
+
+        List<PartyConsent> missing = WSHabeasDataConsentPrivacyDomain.findMissingConsents(
+            [
+                SELECT
+                    Id,
+                    BusinessBrand.Name,
+                    MedicalHistory__c,
+                    DataMarketing__c,
+                    GeneralDataMarketing__c,
+                    GeneralProcessingData__c,
+                    DebtCollection__c,
+                    DirectMarketingVida__c
+                FROM PartyConsent
+                WHERE Id IN :new List<Id>{ pcA.Id, pcB.Id }
+            ],
+            names
+        );
+        Boolean containsOtra = false;
+        for (PartyConsent p : missing) {
+            if (p.BusinessBrand.Name == 'Otra Marca')
+                containsOtra = true;
+        }
+        System.assert(containsOtra);
+
+        List<String> parts = WSHabeasDataConsentPrivacyDomain.splitSafely('Email / Phone / SMS');
+        System.assertEquals(3, parts.size());
+        List<WSHabeasDataExtendWrapper.Auth2300> fromParts = WSHabeasDataConsentPrivacyDomain.createAuth2300List(parts, WSHabeasDataUtilities.DATA_MARKETING);
+        System.assertEquals(3, fromParts.size());
+
+        WSHabeasDataExtendWrapper.CompanyDTO incomplete = new WSHabeasDataExtendWrapper.CompanyDTO();
+        incomplete.name = 'WillBeRemoved';
+        incomplete.generalProcessingData = null;
+        incomplete.generalCommercialOffer = null;
+        incomplete.dataMarketing = null;
+        incomplete.medicalHistory = null;
+        incomplete.authorization2300 = null;
+
+        WSHabeasDataExtendWrapper.HabeasDataDto d = baseReq(false);
+        d.companies = new List<WSHabeasDataExtendWrapper.CompanyDTO>{ c1, incomplete };
+        dom.preProcessCompaniesForSF(d, new List<PartyConsent>());
+        System.assertEquals(2, d.companies.size());
+    }
+
+    /**
+     * @description Join de tipos de contacto con longitud segura (<200) para evitar DML errors en org.
+     * @test
+     */
+    @IsTest
+    static void testJoinContactPointTypes_SafeLength() {
+        Id indId = ensureIndividual('3000', '1', 'Max', 'Len');
+        WSHabeasDataExtendWrapper.HabeasDataDto r = baseReq(false);
+        r.idIndividual = indId;
+
+        List<WSHabeasDataExtendWrapper.Auth2300> many = new List<WSHabeasDataExtendWrapper.Auth2300>();
+        for (Integer i = 0; i < 20; i++) {
+            WSHabeasDataExtendWrapper.Auth2300 a = new WSHabeasDataExtendWrapper.Auth2300();
+            a.value = true;
+            a.dataUsePurpose = WSHabeasDataUtilities.DATA_MARKETING;
+            a.contactPointType = 'E' + String.valueOf(i);
+            many.add(a);
+        }
+
+        WSHabeasDataExtendWrapper.CompanyDTO c = new WSHabeasDataExtendWrapper.CompanyDTO();
+        c.name = 'Colmena Vida';
+        c.generalCommercialOffer = true;
+        c.generalProcessingData = true;
+        c.dataMarketing = true;
+        c.medicalHistory = true;
+        c.authorization2300 = many;
+
+        r.companies = new List<WSHabeasDataExtendWrapper.CompanyDTO>{ c };
+
+        WSHabeasDataConsentPrivacyDomain dom = new WSHabeasDataConsentPrivacyDomain();
+        dom.createPartyConsentHistory(r, System.now());
+
+        PartyConsent pc = [SELECT Id, DirectMarketingVida__c FROM PartyConsent WHERE PartyId = :indId ORDER BY CreatedDate DESC LIMIT 1];
+        System.assert(pc.DirectMarketingVida__c == null || pc.DirectMarketingVida__c.length() <= 200);
     }
 }

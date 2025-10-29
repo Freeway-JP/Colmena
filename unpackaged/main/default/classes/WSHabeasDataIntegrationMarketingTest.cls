@@ -23,6 +23,7 @@ private class WSHabeasDataIntegrationMarketingTest {
         r.contactLastName = null;
         r.contactIdType = null;
         r.contactIdNumber = null;
+        r.treatmentType = 'Cliente';
         return r;
     }
 

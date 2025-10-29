@@ -1,4 +1,4 @@
-public with sharing class WSHabeasDataOriginDomain {
+public without sharing class WSHabeasDataOriginDomain {
     public WSHabeasDataOriginDomain() {
     }
 
@@ -380,8 +380,10 @@ public with sharing class WSHabeasDataOriginDomain {
         List<String> missing = obtenerFaltantes(aseguradoras, request.companies);
 
         Boolean addCompanies = false;
+        Boolean hasGeneralCommercialOffer = false;
         for (HD_API_Rules__mdt rule : businessRules) {
-            if (rule != null && rule.GeneralCommercialOffer__c) {
+            hasGeneralCommercialOffer = validateGeneralProcessingDataLead(request, rule);
+            if (rule != null && rule.GeneralCommercialOffer__c || hasGeneralCommercialOffer) {
                 addCompanies = true;
                 break;
             }
@@ -393,18 +395,33 @@ public with sharing class WSHabeasDataOriginDomain {
                 HD_API_Rules__mdt tempRule = new HD_API_Rules__mdt();
                 tempRule.BusinessBrand__c = m;
                 tempRule.authorizationChannel__c = request.consent.authorizationChannel;
-                tempRule.dataUsePurpose__c = request.consent.dataUsePurpose;
+                tempRule.dataUsePurpose__c = WSHabeasDataUtilities.UPD_VALIDATOR;
                 tempRule.DataMarketing__c = false;
                 tempRule.MedicalHistory__c = false;
                 tempRule.Auth2300__c = false;
                 tempRule.GeneralCommercialOffer__c = true;
-                tempRule.GeneralProcessingData__c = false;
+                tempRule.GeneralProcessingData__c = (hasGeneralCommercialOffer ? true : false);
 
                 businessRules.add(tempRule);
             }
         }
 
         return businessRules;
+    }
+
+    /**
+     * @description valida si debe agregarse tratamiento general de datos para prospectos.
+     */
+    @TestVisible
+    private static Boolean validateGeneralProcessingDataLead(WSHabeasDataAPIDto.HabeasDataDto request, HD_API_Rules__mdt rule) {
+        if (
+            rule.GeneralProcessingData__c &&
+            (WSHabeasDataUtilities.PROSPECTO.equals(request.consent.dataUsePurpose) ||
+            WSHabeasDataUtilities.PROSPECTO_REPRESENTANTE_LEGAL.equals(request.consent.dataUsePurpose))
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -491,6 +508,9 @@ public with sharing class WSHabeasDataOriginDomain {
             company.dataMarketing = rule.DataMarketing__c;
             company.generalCommercialOffer = rule.GeneralCommercialOffer__c;
             company.generalProcessingData = rule.GeneralProcessingData__c;
+            if (WSHabeasDataUtilities.UPD_VALIDATOR.equals(rule.dataUsePurpose__c)) {
+                company.notEssentialFunctionalities = WSHabeasDataUtilities.UPD_VALIDATOR;
+            }
 
             if (rule.Auth2300__c && hasAuth2300Input) {
                 List<WSHabeasDataExtendWrapper.Auth2300> list2300 = toControllerAuth2300(incomingAuth2300);

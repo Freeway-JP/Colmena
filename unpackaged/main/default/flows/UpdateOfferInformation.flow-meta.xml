@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Para el tipo de registro Negocios Institucionales en el objeto casos, cuando el caso pasa a cerrado se actualiza en la oferta los campos Tasa, Valor Prima y Volumen Asegurado</description>
+    <environments>Default</environments>
+    <interviewLabel>Actualizar Informacion Oferta {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Update Offer Information</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>UpdateOfferRegistration</name>
+        <label>Actualizar Registro Oferta</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <inputAssignments>
+            <field>InsuredVolume__c</field>
+            <value>
+                <elementReference>$Record.InsuredVolume__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PremiumValue__c</field>
+            <value>
+                <elementReference>$Record.PremiumValue__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Rate__c</field>
+            <value>
+                <elementReference>$Record.Rate__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record.RelatedOpportunity__r.Quotes</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>UpdateOfferRegistration</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RecordTypeCase__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Validación Comercial Negocios Institucionales</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Cerrado</stringValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

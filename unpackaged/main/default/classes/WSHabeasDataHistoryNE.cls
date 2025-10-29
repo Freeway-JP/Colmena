@@ -17,12 +17,14 @@ public with sharing class WSHabeasDataHistoryNE implements Callable {
     private static final Set<String> TRACKED_FIELDS = new Set<String>{
         'notEssentialFunctionalitiesARL_H__c',
         'notEssentialFunctionalitiesSegGen_H__c',
-        'notEssentialFunctionalitiesSegVida_H__c'
+        'notEssentialFunctionalitiesSegVida_H__c',
+        'notEssentialFunctionalitiesCap_H__c'
     };
     private static final Map<String, String> FIELD_TO_ASEG = new Map<String, String>{
         'notEssentialFunctionalitiesARL_H__c' => 'ARL',
         'notEssentialFunctionalitiesSegGen_H__c' => 'Seguros Generales',
-        'notEssentialFunctionalitiesSegVida_H__c' => 'Seguro de Vida'
+        'notEssentialFunctionalitiesSegVida_H__c' => 'Seguro de Vida',
+        'notEssentialFunctionalitiesCap_H__c' => 'Capitalizadora'
     };
     private static final String OUT_CREATED = 'CreatedDate';
     private static final String OUT_ASEG = 'Aseguradora';
@@ -32,6 +34,7 @@ public with sharing class WSHabeasDataHistoryNE implements Callable {
     private static final String OUT_NAME = 'Nombre';
     private static final String OUT_TI = 'TipoIdentificacion';
     private static final String OUT_NI = 'NumeroIdentificacion';
+    private static final String OUT_UM = 'UltimaModificacion';
     private static final String TZ_ID = UserInfo.getTimeZone().getID();
     private static final String ISO_PATTERN = 'yyyy-MM-dd\'T\'HH:mm:ss.SSSZ';
     private static final Integer DEFAULT_LIMIT = 200;
@@ -198,7 +201,8 @@ public with sharing class WSHabeasDataHistoryNE implements Callable {
                 CreatedDate,
                 Individual.Name,
                 Individual.CS_TipoIdentificacion__c,
-                Individual.CS_NumeroIdentificacion__c
+                Individual.CS_NumeroIdentificacion__c,
+                Individual.LastModifiedBy.Name
             FROM IndividualHistory
             WHERE IndividualId = :individualId AND Field IN :TRACKED_FIELDS
             ORDER BY CreatedDate DESC
@@ -232,6 +236,7 @@ public with sharing class WSHabeasDataHistoryNE implements Callable {
         m.put(OUT_NAME, h.Individual.Name);
         m.put(OUT_TI, getIdentificacionLabel(h.Individual.CS_TipoIdentificacion__c));
         m.put(OUT_NI, h.Individual.CS_NumeroIdentificacion__c);
+        m.put(OUT_UM, h.Individual.LastModifiedBy.Name);
 
         Set<String> vals = parseSemicolonList((String) h.NewValue);
 

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Cuando una tarea es creada o actualizada y esta asociada a un caso, se actualiza en senda</description>
+        <name>CreateOrUpdateTaskSenda</name>
+        <label>CreateOrUpdateTaskSenda</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <actionName>TriggerApexCase</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>idString</name>
+            <value>
+                <elementReference>$Record.WhatId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>TriggerApexCase</nameSegment>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <description>Permite identificar si es un caso relacionado con la integración con Senda: Queja, Derecho de peticion, Incidente, Queja Supersalud, Requerimiento Jurídico, Queja Superintendencia.</description>
+        <name>IsSendaCase</name>
+        <label>Es un caso relacionado con la integración con Senda</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>(1 OR 2 OR 3 OR 4 OR 5 OR 6) AND 7</conditionLogic>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Queja</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Derecho de peticion</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Incidente</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Queja Supersalud</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Requerimiento Jurídico</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Queja Superintendencia</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ElementsWhatId.CS_Numero_de_ATEL__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CreateOrUpdateTaskSenda</targetReference>
+            </connector>
+            <label>Sí</label>
+        </rules>
+    </decisions>
+    <description>Flujo usado en la integración con Senda Médico</description>
+    <environments>Default</environments>
+    <interviewLabel>CreateOrUpdateTaskSenda {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CreateOrUpdateTaskSenda</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Consulta el objeto con el que tiene la realación</description>
+        <name>ElementsWhatId</name>
+        <label>Elementos del whatId</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsSendaCase</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WhatId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>ElementsWhatId</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>WhatId</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue></stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>WhatId</field>
+            <operator>StartsWith</operator>
+            <value>
+                <stringValue>500</stringValue>
+            </value>
+        </filters>
+        <object>Task</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

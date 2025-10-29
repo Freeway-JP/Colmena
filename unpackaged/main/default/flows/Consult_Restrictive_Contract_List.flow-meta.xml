@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Invocador de Clase para consulta de Servicio.</description>
+        <name>RestrictiveListsContracts</name>
+        <label>RestrictiveListsContracts</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>RestrictiveListsContracts</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>inputStrings</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>RestrictiveListsContracts</nameSegment>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Decisi_n_Trigger</name>
+        <label>Decisión Trigger</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>RestrictedList</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sometimiento Documentos</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Sometimiento Documentos</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>RestrictiveListsContracts</targetReference>
+            </connector>
+            <label>Listas Restrictivas</label>
+        </rules>
+    </decisions>
+    <description>Realiza la consulta de listas restrictivas cuando el contrato se encuentra en la etapa de Sometimiento Documentos</description>
+    <environments>Default</environments>
+    <interviewLabel>Consult Restrictive Contract List {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Consult Restrictive Contract List</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Decisi_n_Trigger</targetReference>
+        </connector>
+        <filterFormula>AND(
+    {!$Record.RecordType.DeveloperName} == &quot;OccupationalRisks&quot;,
+    ISPICKVAL({!$Record.Status}, &quot;Sometimiento Documentos&quot;)
+)</filterFormula>
+        <object>Contract</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
